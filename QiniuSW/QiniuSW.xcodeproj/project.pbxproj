@@ -1,0 +1,764 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		E236140F1C8D2E1E00D659A9 /* Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = E236140E1C8D2E1E00D659A9 /* Common.swift */; };
+		E236143B1C8F034A00D659A9 /* CommonCrypto.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = E23614351C8F034A00D659A9 /* CommonCrypto.xcconfig */; };
+		E236143C1C8F03AE00D659A9 /* CommonCrypto.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E23614271C8F018E00D659A9 /* CommonCrypto.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		E27BCE6F1C939FEC00B713F8 /* RSTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E27BCE6E1C939FEC00B713F8 /* RSTests.swift */; };
+		E27BCE711C93C6A500B713F8 /* TestConfigTemplate.json in Resources */ = {isa = PBXBuildFile; fileRef = E27BCE701C93C6A500B713F8 /* TestConfigTemplate.json */; };
+		E281D4B81C97631B005A017D /* IO.swift in Sources */ = {isa = PBXBuildFile; fileRef = E281D4B71C97631B005A017D /* IO.swift */; };
+		E281D4BA1C97663C005A017D /* JsonTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E281D4B91C97663C005A017D /* JsonTests.swift */; };
+		E281D4BC1C97BAF9005A017D /* QETag.swift in Sources */ = {isa = PBXBuildFile; fileRef = E281D4BB1C97BAF9005A017D /* QETag.swift */; };
+		E281D4D31C9818F6005A017D /* UtilSW.h in Headers */ = {isa = PBXBuildFile; fileRef = E281D4D21C9818F6005A017D /* UtilSW.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E281D4D81C98192C005A017D /* UtilSW.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E281D4D01C9818F6005A017D /* UtilSW.framework */; };
+		E281D4DA1C981959005A017D /* Bytes.swift in Sources */ = {isa = PBXBuildFile; fileRef = E281D4D91C981959005A017D /* Bytes.swift */; };
+		E281D4DC1C9819E2005A017D /* DData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E281D4DB1C9819E2005A017D /* DData.swift */; };
+		E281D4DE1C981A67005A017D /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E281D4DD1C981A67005A017D /* Extension.swift */; };
+		E281D4E01C981B34005A017D /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E281D4DF1C981B34005A017D /* Extension.swift */; };
+		E281D4E11C981C01005A017D /* CommonCrypto.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E23614271C8F018E00D659A9 /* CommonCrypto.framework */; };
+		E281D4E81C981E48005A017D /* Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = E281D4E21C981E48005A017D /* Async.swift */; };
+		E281D4E91C981E48005A017D /* Base64.swift in Sources */ = {isa = PBXBuildFile; fileRef = E281D4E31C981E48005A017D /* Base64.swift */; };
+		E281D4EA1C981E48005A017D /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E281D4E41C981E48005A017D /* Channel.swift */; };
+		E281D4EB1C981E48005A017D /* Crc32.swift in Sources */ = {isa = PBXBuildFile; fileRef = E281D4E51C981E48005A017D /* Crc32.swift */; };
+		E281D4EC1C981E48005A017D /* Json.swift in Sources */ = {isa = PBXBuildFile; fileRef = E281D4E61C981E48005A017D /* Json.swift */; };
+		E281D4ED1C981E48005A017D /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = E281D4E71C981E48005A017D /* Session.swift */; };
+		E281D4F01C981E8B005A017D /* Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = E281D4EE1C981E8B005A017D /* Client.swift */; };
+		E281D4F11C981E8B005A017D /* RS.swift in Sources */ = {isa = PBXBuildFile; fileRef = E281D4EF1C981E8B005A017D /* RS.swift */; };
+		E281D51A1C9AAC77005A017D /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = E281D5191C9AAC77005A017D /* Constant.swift */; };
+		E281D51C1C9BA8F6005A017D /* IOTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E281D51B1C9BA8F6005A017D /* IOTests.swift */; };
+		E281D5211C9BF5F2005A017D /* UtilSW.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E281D4D01C9818F6005A017D /* UtilSW.framework */; };
+		E281D5221C9BF5F5005A017D /* CommonCrypto.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E23614271C8F018E00D659A9 /* CommonCrypto.framework */; };
+		E281D5261C9D7047005A017D /* RIO.swift in Sources */ = {isa = PBXBuildFile; fileRef = E281D5251C9D7047005A017D /* RIO.swift */; };
+		E281D5281C9E0780005A017D /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = E281D5271C9E0780005A017D /* Util.swift */; };
+		E281D52A1CA49055005A017D /* D.swift in Sources */ = {isa = PBXBuildFile; fileRef = E281D5291CA49054005A017D /* D.swift */; };
+		E281D52C1CA4BD16005A017D /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = E281D52B1CA4BD16005A017D /* File.swift */; };
+		E2BB243E1CA5362600CD45AC /* RD.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2BB243D1CA5362600CD45AC /* RD.swift */; };
+		E2BB24401CA6535C00CD45AC /* Recorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2BB243F1CA6535C00CD45AC /* Recorder.swift */; };
+		E2C913241C72D65B009E825F /* QiniuSW.h in Headers */ = {isa = PBXBuildFile; fileRef = E2C913231C72D65B009E825F /* QiniuSW.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E2C9132B1C72D65B009E825F /* QiniuSW.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2C913201C72D65B009E825F /* QiniuSW.framework */; };
+		E2C913301C72D65B009E825F /* QiniuSWTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2C9132F1C72D65B009E825F /* QiniuSWTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		E2C9132C1C72D65B009E825F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E2C913171C72D65B009E825F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E2C9131F1C72D65B009E825F;
+			remoteInfo = QiniuSW;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		E236140E1C8D2E1E00D659A9 /* Common.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Common.swift; sourceTree = "<group>"; };
+		E23614271C8F018E00D659A9 /* CommonCrypto.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CommonCrypto.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E236142B1C8F018E00D659A9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E23614331C8F034A00D659A9 /* appletvos.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = appletvos.modulemap; sourceTree = "<group>"; };
+		E23614341C8F034A00D659A9 /* appletvsimulator.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = appletvsimulator.modulemap; sourceTree = "<group>"; };
+		E23614351C8F034A00D659A9 /* CommonCrypto.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = CommonCrypto.xcconfig; sourceTree = "<group>"; };
+		E23614361C8F034A00D659A9 /* iphoneos.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = iphoneos.modulemap; sourceTree = "<group>"; };
+		E23614371C8F034A00D659A9 /* iphonesimulator.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = iphonesimulator.modulemap; sourceTree = "<group>"; };
+		E23614381C8F034A00D659A9 /* macosx.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = macosx.modulemap; sourceTree = "<group>"; };
+		E23614391C8F034A00D659A9 /* watchos.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = watchos.modulemap; sourceTree = "<group>"; };
+		E236143A1C8F034A00D659A9 /* watchsimulator.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = watchsimulator.modulemap; sourceTree = "<group>"; };
+		E27BCE6E1C939FEC00B713F8 /* RSTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSTests.swift; sourceTree = "<group>"; };
+		E27BCE701C93C6A500B713F8 /* TestConfigTemplate.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = TestConfigTemplate.json; sourceTree = "<group>"; };
+		E281D4B71C97631B005A017D /* IO.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IO.swift; sourceTree = "<group>"; };
+		E281D4B91C97663C005A017D /* JsonTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JsonTests.swift; sourceTree = "<group>"; };
+		E281D4BB1C97BAF9005A017D /* QETag.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QETag.swift; sourceTree = "<group>"; };
+		E281D4D01C9818F6005A017D /* UtilSW.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = UtilSW.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E281D4D21C9818F6005A017D /* UtilSW.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UtilSW.h; sourceTree = "<group>"; };
+		E281D4D41C9818F7005A017D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E281D4D91C981959005A017D /* Bytes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bytes.swift; sourceTree = "<group>"; };
+		E281D4DB1C9819E2005A017D /* DData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DData.swift; sourceTree = "<group>"; };
+		E281D4DD1C981A67005A017D /* Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
+		E281D4DF1C981B34005A017D /* Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
+		E281D4E21C981E48005A017D /* Async.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Async.swift; sourceTree = "<group>"; };
+		E281D4E31C981E48005A017D /* Base64.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Base64.swift; sourceTree = "<group>"; };
+		E281D4E41C981E48005A017D /* Channel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Channel.swift; sourceTree = "<group>"; };
+		E281D4E51C981E48005A017D /* Crc32.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Crc32.swift; sourceTree = "<group>"; };
+		E281D4E61C981E48005A017D /* Json.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Json.swift; sourceTree = "<group>"; };
+		E281D4E71C981E48005A017D /* Session.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
+		E281D4EE1C981E8B005A017D /* Client.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Client.swift; sourceTree = "<group>"; };
+		E281D4EF1C981E8B005A017D /* RS.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RS.swift; sourceTree = "<group>"; };
+		E281D5191C9AAC77005A017D /* Constant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
+		E281D51B1C9BA8F6005A017D /* IOTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IOTests.swift; sourceTree = "<group>"; };
+		E281D5251C9D7047005A017D /* RIO.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RIO.swift; sourceTree = "<group>"; };
+		E281D5271C9E0780005A017D /* Util.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
+		E281D5291CA49054005A017D /* D.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = D.swift; sourceTree = "<group>"; };
+		E281D52B1CA4BD16005A017D /* File.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
+		E2BB243D1CA5362600CD45AC /* RD.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RD.swift; sourceTree = "<group>"; };
+		E2BB243F1CA6535C00CD45AC /* Recorder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Recorder.swift; sourceTree = "<group>"; };
+		E2C913201C72D65B009E825F /* QiniuSW.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = QiniuSW.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E2C913231C72D65B009E825F /* QiniuSW.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QiniuSW.h; sourceTree = "<group>"; };
+		E2C913251C72D65B009E825F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E2C9132A1C72D65B009E825F /* QiniuSWTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = QiniuSWTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		E2C9132F1C72D65B009E825F /* QiniuSWTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QiniuSWTests.swift; sourceTree = "<group>"; };
+		E2C913311C72D65B009E825F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		E23614231C8F018E00D659A9 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E281D4CC1C9818F6005A017D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E281D4E11C981C01005A017D /* CommonCrypto.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E2C9131C1C72D65B009E825F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E281D4D81C98192C005A017D /* UtilSW.framework in Frameworks */,
+				E236143C1C8F03AE00D659A9 /* CommonCrypto.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E2C913271C72D65B009E825F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E281D5221C9BF5F5005A017D /* CommonCrypto.framework in Frameworks */,
+				E281D5211C9BF5F2005A017D /* UtilSW.framework in Frameworks */,
+				E2C9132B1C72D65B009E825F /* QiniuSW.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		E23614281C8F018E00D659A9 /* CommonCrypto */ = {
+			isa = PBXGroup;
+			children = (
+				E23614331C8F034A00D659A9 /* appletvos.modulemap */,
+				E23614341C8F034A00D659A9 /* appletvsimulator.modulemap */,
+				E23614351C8F034A00D659A9 /* CommonCrypto.xcconfig */,
+				E23614361C8F034A00D659A9 /* iphoneos.modulemap */,
+				E23614371C8F034A00D659A9 /* iphonesimulator.modulemap */,
+				E23614381C8F034A00D659A9 /* macosx.modulemap */,
+				E23614391C8F034A00D659A9 /* watchos.modulemap */,
+				E236143A1C8F034A00D659A9 /* watchsimulator.modulemap */,
+				E236142B1C8F018E00D659A9 /* Info.plist */,
+			);
+			path = CommonCrypto;
+			sourceTree = "<group>";
+		};
+		E281D4D11C9818F6005A017D /* UtilSW */ = {
+			isa = PBXGroup;
+			children = (
+				E281D4D41C9818F7005A017D /* Info.plist */,
+				E281D4D21C9818F6005A017D /* UtilSW.h */,
+				E281D5191C9AAC77005A017D /* Constant.swift */,
+				E281D4DD1C981A67005A017D /* Extension.swift */,
+				E281D5271C9E0780005A017D /* Util.swift */,
+				E281D52B1CA4BD16005A017D /* File.swift */,
+				E281D4E31C981E48005A017D /* Base64.swift */,
+				E281D4E51C981E48005A017D /* Crc32.swift */,
+				E281D4D91C981959005A017D /* Bytes.swift */,
+				E281D4DB1C9819E2005A017D /* DData.swift */,
+				E281D4E61C981E48005A017D /* Json.swift */,
+				E281D4E21C981E48005A017D /* Async.swift */,
+				E281D4E41C981E48005A017D /* Channel.swift */,
+				E281D4E71C981E48005A017D /* Session.swift */,
+				E2BB243F1CA6535C00CD45AC /* Recorder.swift */,
+			);
+			path = UtilSW;
+			sourceTree = "<group>";
+		};
+		E2C913161C72D65B009E825F = {
+			isa = PBXGroup;
+			children = (
+				E23614281C8F018E00D659A9 /* CommonCrypto */,
+				E281D4D11C9818F6005A017D /* UtilSW */,
+				E2C913221C72D65B009E825F /* QiniuSW */,
+				E2C9132E1C72D65B009E825F /* QiniuSWTests */,
+				E2C913211C72D65B009E825F /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		E2C913211C72D65B009E825F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				E2C913201C72D65B009E825F /* QiniuSW.framework */,
+				E2C9132A1C72D65B009E825F /* QiniuSWTests.xctest */,
+				E23614271C8F018E00D659A9 /* CommonCrypto.framework */,
+				E281D4D01C9818F6005A017D /* UtilSW.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		E2C913221C72D65B009E825F /* QiniuSW */ = {
+			isa = PBXGroup;
+			children = (
+				E2C913251C72D65B009E825F /* Info.plist */,
+				E2C913231C72D65B009E825F /* QiniuSW.h */,
+				E281D4DF1C981B34005A017D /* Extension.swift */,
+				E281D4BB1C97BAF9005A017D /* QETag.swift */,
+				E281D4EE1C981E8B005A017D /* Client.swift */,
+				E281D4B71C97631B005A017D /* IO.swift */,
+				E281D5251C9D7047005A017D /* RIO.swift */,
+				E281D5291CA49054005A017D /* D.swift */,
+				E2BB243D1CA5362600CD45AC /* RD.swift */,
+				E281D4EF1C981E8B005A017D /* RS.swift */,
+			);
+			path = QiniuSW;
+			sourceTree = "<group>";
+		};
+		E2C9132E1C72D65B009E825F /* QiniuSWTests */ = {
+			isa = PBXGroup;
+			children = (
+				E27BCE701C93C6A500B713F8 /* TestConfigTemplate.json */,
+				E2C913311C72D65B009E825F /* Info.plist */,
+				E236140E1C8D2E1E00D659A9 /* Common.swift */,
+				E2C9132F1C72D65B009E825F /* QiniuSWTests.swift */,
+				E281D4B91C97663C005A017D /* JsonTests.swift */,
+				E27BCE6E1C939FEC00B713F8 /* RSTests.swift */,
+				E281D51B1C9BA8F6005A017D /* IOTests.swift */,
+			);
+			path = QiniuSWTests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		E23614241C8F018E00D659A9 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E281D4CD1C9818F6005A017D /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E281D4D31C9818F6005A017D /* UtilSW.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E2C9131D1C72D65B009E825F /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E2C913241C72D65B009E825F /* QiniuSW.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		E23614261C8F018E00D659A9 /* CommonCrypto */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E236142C1C8F018E00D659A9 /* Build configuration list for PBXNativeTarget "CommonCrypto" */;
+			buildPhases = (
+				E23614221C8F018E00D659A9 /* Sources */,
+				E23614231C8F018E00D659A9 /* Frameworks */,
+				E23614241C8F018E00D659A9 /* Headers */,
+				E23614251C8F018E00D659A9 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CommonCrypto;
+			productName = CommonCrypto;
+			productReference = E23614271C8F018E00D659A9 /* CommonCrypto.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		E281D4CF1C9818F6005A017D /* UtilSW */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E281D4D51C9818F7005A017D /* Build configuration list for PBXNativeTarget "UtilSW" */;
+			buildPhases = (
+				E281D4CB1C9818F6005A017D /* Sources */,
+				E281D4CC1C9818F6005A017D /* Frameworks */,
+				E281D4CD1C9818F6005A017D /* Headers */,
+				E281D4CE1C9818F6005A017D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = UtilSW;
+			productName = UtilSW;
+			productReference = E281D4D01C9818F6005A017D /* UtilSW.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		E2C9131F1C72D65B009E825F /* QiniuSW */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E2C913341C72D65B009E825F /* Build configuration list for PBXNativeTarget "QiniuSW" */;
+			buildPhases = (
+				E2C9131B1C72D65B009E825F /* Sources */,
+				E2C9131C1C72D65B009E825F /* Frameworks */,
+				E2C9131D1C72D65B009E825F /* Headers */,
+				E2C9131E1C72D65B009E825F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = QiniuSW;
+			productName = QiniuSW;
+			productReference = E2C913201C72D65B009E825F /* QiniuSW.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		E2C913291C72D65B009E825F /* QiniuSWTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E2C913371C72D65B009E825F /* Build configuration list for PBXNativeTarget "QiniuSWTests" */;
+			buildPhases = (
+				E2C913261C72D65B009E825F /* Sources */,
+				E2C913271C72D65B009E825F /* Frameworks */,
+				E2C913281C72D65B009E825F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				E2C9132D1C72D65B009E825F /* PBXTargetDependency */,
+			);
+			name = QiniuSWTests;
+			productName = QiniuSWTests;
+			productReference = E2C9132A1C72D65B009E825F /* QiniuSWTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		E2C913171C72D65B009E825F /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0720;
+				LastUpgradeCheck = 0720;
+				ORGANIZATIONNAME = fatboyzz;
+				TargetAttributes = {
+					E23614261C8F018E00D659A9 = {
+						CreatedOnToolsVersion = 7.2;
+					};
+					E281D4CF1C9818F6005A017D = {
+						CreatedOnToolsVersion = 7.2;
+					};
+					E2C9131F1C72D65B009E825F = {
+						CreatedOnToolsVersion = 7.2;
+					};
+					E2C913291C72D65B009E825F = {
+						CreatedOnToolsVersion = 7.2;
+					};
+				};
+			};
+			buildConfigurationList = E2C9131A1C72D65B009E825F /* Build configuration list for PBXProject "QiniuSW" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = E2C913161C72D65B009E825F;
+			productRefGroup = E2C913211C72D65B009E825F /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				E23614261C8F018E00D659A9 /* CommonCrypto */,
+				E281D4CF1C9818F6005A017D /* UtilSW */,
+				E2C9131F1C72D65B009E825F /* QiniuSW */,
+				E2C913291C72D65B009E825F /* QiniuSWTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		E23614251C8F018E00D659A9 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E236143B1C8F034A00D659A9 /* CommonCrypto.xcconfig in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E281D4CE1C9818F6005A017D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E2C9131E1C72D65B009E825F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E2C913281C72D65B009E825F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E27BCE711C93C6A500B713F8 /* TestConfigTemplate.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		E23614221C8F018E00D659A9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E281D4CB1C9818F6005A017D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E281D4E81C981E48005A017D /* Async.swift in Sources */,
+				E281D4EB1C981E48005A017D /* Crc32.swift in Sources */,
+				E2BB24401CA6535C00CD45AC /* Recorder.swift in Sources */,
+				E281D4EA1C981E48005A017D /* Channel.swift in Sources */,
+				E281D4DE1C981A67005A017D /* Extension.swift in Sources */,
+				E281D4DC1C9819E2005A017D /* DData.swift in Sources */,
+				E281D4E91C981E48005A017D /* Base64.swift in Sources */,
+				E281D5281C9E0780005A017D /* Util.swift in Sources */,
+				E281D4DA1C981959005A017D /* Bytes.swift in Sources */,
+				E281D51A1C9AAC77005A017D /* Constant.swift in Sources */,
+				E281D52C1CA4BD16005A017D /* File.swift in Sources */,
+				E281D4EC1C981E48005A017D /* Json.swift in Sources */,
+				E281D4ED1C981E48005A017D /* Session.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E2C9131B1C72D65B009E825F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E281D5261C9D7047005A017D /* RIO.swift in Sources */,
+				E2BB243E1CA5362600CD45AC /* RD.swift in Sources */,
+				E281D52A1CA49055005A017D /* D.swift in Sources */,
+				E281D4E01C981B34005A017D /* Extension.swift in Sources */,
+				E281D4B81C97631B005A017D /* IO.swift in Sources */,
+				E281D4F01C981E8B005A017D /* Client.swift in Sources */,
+				E281D4F11C981E8B005A017D /* RS.swift in Sources */,
+				E281D4BC1C97BAF9005A017D /* QETag.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E2C913261C72D65B009E825F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E236140F1C8D2E1E00D659A9 /* Common.swift in Sources */,
+				E281D51C1C9BA8F6005A017D /* IOTests.swift in Sources */,
+				E27BCE6F1C939FEC00B713F8 /* RSTests.swift in Sources */,
+				E2C913301C72D65B009E825F /* QiniuSWTests.swift in Sources */,
+				E281D4BA1C97663C005A017D /* JsonTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		E2C9132D1C72D65B009E825F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E2C9131F1C72D65B009E825F /* QiniuSW */;
+			targetProxy = E2C9132C1C72D65B009E825F /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		E236142D1C8F018E00D659A9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = E23614351C8F034A00D659A9 /* CommonCrypto.xcconfig */;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				INFOPLIST_FILE = CommonCrypto/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.fatboyzz.CommonCrypto;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		E236142E1C8F018E00D659A9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = E23614351C8F034A00D659A9 /* CommonCrypto.xcconfig */;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				INFOPLIST_FILE = CommonCrypto/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.fatboyzz.CommonCrypto;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		E281D4D61C9818F7005A017D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				INFOPLIST_FILE = UtilSW/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.fatboyzz.UtilSW;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		E281D4D71C9818F7005A017D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				INFOPLIST_FILE = UtilSW/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.fatboyzz.UtilSW;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		E2C913321C72D65B009E825F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		E2C913331C72D65B009E825F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		E2C913351C72D65B009E825F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				INFOPLIST_FILE = QiniuSW/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SDKROOT)/usr/lib/system",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.fatboyzz.QiniuSW;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		E2C913361C72D65B009E825F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				INFOPLIST_FILE = QiniuSW/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SDKROOT)/usr/lib/system",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.fatboyzz.QiniuSW;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "";
+			};
+			name = Release;
+		};
+		E2C913381C72D65B009E825F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = QiniuSWTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.fatboyzz.QiniuSWTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		E2C913391C72D65B009E825F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = QiniuSWTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.fatboyzz.QiniuSWTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		E236142C1C8F018E00D659A9 /* Build configuration list for PBXNativeTarget "CommonCrypto" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E236142D1C8F018E00D659A9 /* Debug */,
+				E236142E1C8F018E00D659A9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E281D4D51C9818F7005A017D /* Build configuration list for PBXNativeTarget "UtilSW" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E281D4D61C9818F7005A017D /* Debug */,
+				E281D4D71C9818F7005A017D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E2C9131A1C72D65B009E825F /* Build configuration list for PBXProject "QiniuSW" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E2C913321C72D65B009E825F /* Debug */,
+				E2C913331C72D65B009E825F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E2C913341C72D65B009E825F /* Build configuration list for PBXNativeTarget "QiniuSW" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E2C913351C72D65B009E825F /* Debug */,
+				E2C913361C72D65B009E825F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E2C913371C72D65B009E825F /* Build configuration list for PBXNativeTarget "QiniuSWTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E2C913381C72D65B009E825F /* Debug */,
+				E2C913391C72D65B009E825F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = E2C913171C72D65B009E825F /* Project object */;
+}
