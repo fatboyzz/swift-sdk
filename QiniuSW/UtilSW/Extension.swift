@@ -1,54 +1,44 @@
 import Foundation
 
-public extension UInt16 {
-    public func toBytes() -> Bytes {
-        var ret = Bytes(2)
-        ret.data.append(UInt8( self & UInt16(0x00FF)))
-        ret.data.append(UInt8((self & UInt16(0xFF00)) >> 8))
-        return ret
-    }
-}
-
-public extension UInt32 {
-    public func toBytes() -> Bytes {
-        var ret = Bytes(4)
-        ret.data.append(UInt8( self & UInt32(0x000000FF)))
-        ret.data.append(UInt8((self & UInt32(0x0000FF00)) >> 8))
-        ret.data.append(UInt8((self & UInt32(0x00FF0000)) >> 16))
-        ret.data.append(UInt8((self & UInt32(0xFF000000)) >> 24))
-        return ret
-    }
-}
-
 public extension NSInputStream {
-    public func readUInt16() throws -> UInt16 {
-        var buf = Bytes([UInt8](count: 2, repeatedValue: 0))
-        if read(&buf.data, maxLength: 2) < 2 {
-            throw "readUInt16 fail"
+    public func readValue<T>() throws -> T {
+        let size = sizeof(T.self)
+        var buf = Bytes(count: size)
+        if read(&buf.data, maxLength: size) < size {
+            throw "readValue fail"
         }
-        return buf.toUInt16()
+        return buf.toValue()
     }
     
-    public func readUInt32() throws -> UInt32 {
-        var buf = Bytes([UInt8](count: 4, repeatedValue: 0))
-        if read(&buf.data, maxLength: 4) < 4 {
-            throw "readUInt32 fail"
-        }
-        return buf.toUInt32()
-    }
-    
-    public func readNSData(size : Int) throws -> NSData {
+    public func readNSData(size : Int = Int.max) throws -> NSData {
         let data = NSMutableData(length: size)!
         let p = UnsafeMutablePointer<UInt8>(data.bytes)
-        if read(p, maxLength: size) < size {
+        let ret = read(p, maxLength: size)
+        if ret < 0 {
             throw "readNSData fail"
+        }
+        if ret < size {
+            return data.subdataWithRange(NSRange(0 ..< ret))
         }
         return data
     }
 }
 
 public extension NSOutputStream {
+    public func writeValue<T>(value : T) throws {
+        let size = sizeof(T.self)
+        var buf = Bytes(value: value)
+        if write(&buf.data, maxLength: size) < size {
+            throw "writeValue fail"
+        }
+    }
     
+    public func writeNSData(data : NSData) throws {
+        let p = UnsafePointer<UInt8>(data.bytes)
+        if write(p, maxLength: data.count) < data.count {
+            throw "writeNSData fail"
+        }
+    }
 }
 
 public extension Optional {
@@ -72,13 +62,24 @@ public extension NSData {
     public func toBytes() -> Bytes {
         var data = Array(count: length, repeatedValue: UInt8(0))
         getBytes(&data, length: data.count)
-        return Bytes(data)
+        return Bytes(data: data)
     }
     
     public func toString(
         encoding : NSStringEncoding = NSUTF8StringEncoding
     ) -> String {
         return String(data: self, encoding: encoding)!
+    }
+    
+    public func toValue<T>() -> T {
+        let p = UnsafePointer<T>(bytes)
+        return p.memory
+    }
+    
+    public func toDData() -> DData {
+        return DData(dispatch_data_create(
+            bytes, count, qUtility(), nil
+        ))
     }
 }
 
@@ -90,7 +91,13 @@ public extension String {
     }
     
     public func toUtf8() -> Bytes {
-        return Bytes(Array(utf8))
+        return Bytes(data: Array(utf8))
+    }
+    
+    public func split(set : String) -> [String] {
+        return unicodeScalars.split {
+            set.unicodeScalars.contains($0)
+        }.map(String.init)
     }
 }
 

@@ -61,7 +61,7 @@ private func encodeOps(ops : [Op]) -> Bytes {
 
 private func parseItem(op : Op, item : NSDictionary) -> Ret<OpSucc> {
     let code = item.objectForKey("code")! as! Int
-    switch (accepted(code), op) {
+    switch (code / 100 == 2 , op) {
     case (false, _):
         let d = item.objectForKey("data")!
         let e = jobjToObj(Error(), d) as! Error
@@ -138,7 +138,7 @@ extension Client {
         let req = requestBatch(ops)
         return responseData(req).bindRet(.Sync)
         { (resp, data) -> [Ret<OpSucc>] in
-            if accepted(resp.statusCode) {
+            if resp.accepted {
                 let items = jsonToJobj(data) as! [NSDictionary]
                 return zip(ops, items).map(parseItem)
             } else {

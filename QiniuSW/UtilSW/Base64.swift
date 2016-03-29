@@ -1,6 +1,15 @@
 import Foundation
 
 public struct Base64 {
+    
+    static func chr(u : UnicodeScalar) -> UInt8 {
+        return UInt8(u.value)
+    }
+    
+    static func ord(u : UInt8) -> UnicodeScalar {
+        return UnicodeScalar(u)
+    }
+    
     static func table(s : String) -> [UInt8] {
         return Array(s.unicodeScalars).map { u in UInt8(u.value) }
     }
@@ -13,9 +22,9 @@ public struct Base64 {
         return ret
     }
     
-    static let padding = chr("=")
-    static let cr = chr("\r")
-    static let lf = chr("\n")
+    static let padding = Base64.chr("=")
+    static let cr = Base64.chr("\r")
+    static let lf = Base64.chr("\n")
     
     static func clean(u : [UInt8]) -> [UInt8] {
         return u.filter { u in

@@ -197,7 +197,7 @@ public extension Client {
         path : String,
         extra : PutExtra
     ) -> Async<Ret<PutSucc>> {
-        let ch = Channel(path: path, oflag: O_RDONLY)
+        let ch = try! Channel(path: path, oflag: O_RDONLY)
         return put(token: token, key: key, ch: ch, extra: extra)
     }
 }
@@ -208,7 +208,7 @@ public func publicUrl(
     return "http://\(domain)/\(key)"
 }
 
-public extension Client {
+extension Client {
     func attachToken(url : String) -> String {
         return "\(url)&token=\(mac.sign(url.toUtf8()))"
     }

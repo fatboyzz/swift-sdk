@@ -45,7 +45,7 @@ class RandomData {
     static func genData(path : String, size : Int) -> Bool {
         if File.exist(path) { return false }
         let ch = Channel(fd: creat(path, 0o644))
-        let r = Channel(path: "/dev/random", oflag: O_RDONLY)
+        let r = try! Channel(path: "/dev/random", oflag: O_RDONLY)
         r.copyTo(ch, count: size).runSync()
         return true
     }
@@ -55,7 +55,7 @@ class RandomData {
         self.path = "\(testPath)/\(name)"
         self.entry = Entry(bucket: tc.BUCKET, key: name)
         RandomData.genData(path, size: size)
-        self.channel = Channel(path: path, oflag: O_RDONLY)
+        self.channel = try! Channel(path: path, oflag: O_RDONLY)
         var qetag = ""
         QETag.hash(ch: self.channel)
         .bindRet(.Sync) { qetag = $0 }

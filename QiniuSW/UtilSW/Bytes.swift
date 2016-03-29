@@ -9,13 +9,17 @@ public struct Bytes {
         self.data = [UInt8]()
     }
     
-    public init(_ data : [UInt8]) {
+    public init(data : [UInt8]) {
         self.data = data
     }
     
-    public init(_ capacity : Int) {
+    public init(capacity : Int) {
         self.data = [UInt8]()
         self.data.reserveCapacity(capacity)
+    }
+    
+    public init(count : Int) {
+        self.data = [UInt8].init(count: count, repeatedValue: 0)
     }
     
     public init<T>(value : T) {
@@ -33,7 +37,7 @@ public struct Bytes {
         BS : SequenceType where BS.Generator.Element == Bytes
     >(bs : BS) -> Bytes {
         let total = bs.reduce(0) { $0 + $1.count }
-        var ret = Bytes(total)
+        var ret = Bytes(capacity: total)
         ret.appends(bs)
         return ret
     }
@@ -49,7 +53,7 @@ public struct Bytes {
     }
     
     public func concat(data : Bytes) -> Bytes {
-        var ret = Bytes(count + data.count)
+        var ret = Bytes(capacity: count + data.count)
         ret.append(self)
         ret.append(data)
         return ret
@@ -59,18 +63,6 @@ public struct Bytes {
         let pb = UnsafePointer<UInt8>(data)
         let p = UnsafePointer<T>(pb)
         return p.memory
-    }
-    
-    public func toUInt16() -> UInt16 {
-        return UInt16(data[0]) |
-        (UInt16(data[1]) << 8)
-    }
-    
-    public func toUInt32() -> UInt32 {
-        return UInt32(data[0]) |
-        (UInt32(data[1]) << 8) |
-        (UInt32(data[2]) << 16) |
-        (UInt32(data[3]) << 24)
     }
     
     public func toNSData() -> NSData {
@@ -95,7 +87,7 @@ public struct Bytes {
             repeatedValue: UInt8(0)
         )
         CC_SHA1(data, CC_LONG(data.count), &buf)
-        return Bytes(buf)
+        return Bytes(data: buf)
     }
     
     public func hmacsha1(key : Bytes) -> Bytes {
@@ -109,15 +101,15 @@ public struct Bytes {
             data, data.count,
             &buf
         )
-        return Bytes(buf)
+        return Bytes(data: buf)
     }
     
     public func base64Urlsafe() -> Bytes {
-        return Bytes(Base64.urlsafe.encode(data))
+        return Bytes(data: Base64.urlsafe.encode(data))
     }
     
     public func base64Normal() -> Bytes {
-        return Bytes(Base64.normal.encode(data))
+        return Bytes(data: Base64.normal.encode(data))
     }
     
     public func crc32IEEE(seed : UInt32 = 0) -> UInt32 {

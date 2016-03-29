@@ -9,10 +9,10 @@ public class RPutChunkSucc : NSObject {
     public var host = ""
 }
 
-public struct RPutProgress {
-    public let blockId : Int
-    public let blockSize : Int
-    public let ret : RPutChunkSucc
+public class RPutProgress : NSObject {
+    public var blockId = 0
+    public var blockSize = 0
+    public var ret = RPutChunkSucc()
 }
 
 public func cleanRPutProgresses(ps : [RPutProgress]) -> [RPutProgress] {
@@ -37,7 +37,6 @@ struct RPutBlockCtx {
     let blockId : Int
     let blockSize : Int
     let prev : RPutChunkSucc
-    let notify : RPutProgress -> ()
     
     let blockStart : Int64
     let mkblkUrl : String
@@ -46,14 +45,12 @@ struct RPutBlockCtx {
         _ rputCtx : RPutCtx,
         _ blockId : Int,
         _ blockSize : Int,
-        _ prev : RPutChunkSucc,
-        _ notify : RPutProgress -> ()
+        _ prev : RPutChunkSucc
     ) {
         self.rputCtx = rputCtx
         self.blockId = blockId
         self.blockSize = blockSize
         self.prev = prev
-        self.notify = notify
         
         self.blockStart = Int64(rputCtx.extra.blockSize) * Int64(blockId)
         self.mkblkUrl = "\(rputCtx.c.config.upHost)/mkblk/\(blockSize)"
@@ -80,14 +77,14 @@ struct RPutBlockCtx {
     }
     
     func progress(ret : RPutChunkSucc) -> RPutProgress {
-        return RPutProgress(
-            blockId: blockId, blockSize: blockSize, ret: ret
-        )
+        let p = RPutProgress()
+        p.blockId = blockId
+        p.blockSize = blockSize
+        p.ret = ret
+        return p
     }
     
-    func chunk(
-        url : String, _ offset : Int
-    ) -> Async<Ret<RPutChunkSucc>> {
+    func chunk(url : String, _ offset : Int) -> Async<Ret<RPutChunkSucc>> {
         return rputCtx.ch.readAt(self.blockStart, chunkSize(offset))
         .bind(.Sync) { (ddata : DData) in
             let crc32 = ddata.toBytes().crc32IEEE()
@@ -97,7 +94,7 @@ struct RPutBlockCtx {
                 switch ret {
                 case .Succ(let s):
                     if s.crc32 == crc32 {
-                        self.notify(self.progress(s))
+                        self.rputCtx.extra.notify(self.progress(s))
                         return ret
                     } else {
                         return .Fail(Error("Invalid chunk crc32"))
@@ -116,13 +113,13 @@ struct RPutBlockCtx {
             switch cur {
             case .Succ(let s):
                 if s.offset == 0 {
-                    return self.chunk(self.mkblkUrl, 0).bind(.Sync)
-                    { self.loop(times, s, $0) }
+                    return self.chunk(self.mkblkUrl, 0)
+                    .bind(.Sync) { self.loop(times, s, $0) }
                 } else if s.offset == self.blockSize {
                     return ret(cur)
                 } else {
-                    return self.chunk(self.bputUrl(s), s.offset).bind(.Sync)
-                    { self.loop(times, s, $0) }
+                    return self.chunk(self.bputUrl(s), s.offset)
+                    .bind(.Sync) { self.loop(times, s, $0) }
                 }
             case .Fail(_):
                 if times < self.rputCtx.extra.tryTimes {
@@ -153,7 +150,6 @@ struct RPutCtx {
     let blockCount : Int
     let blockLastSize : Int
     let progresses : [RPutProgress]
-    let notify : RPutProgress -> ()
     
     init(_ c : Client,
         _ token : String,
@@ -172,15 +168,10 @@ struct RPutCtx {
         self.blockCount = Int((ch.size + Int64(blockSize - 1)) / Int64(blockSize))
         self.blockLastSize = ch.size - Int64(blockSize) * Int64(blockCount - 1)
         self.progresses = cleanRPutProgresses(extra.progresses)
-        
-        let notifyLock = Mutex()
-        self.notify = { (p : RPutProgress) in
-            lock(notifyLock) { extra.notify(p) }
-        }
     }
     
     func blockSizeOfId(blockId : Int) -> Int {
-        return blockId == blockCount - 1 ? blockSize : blockLastSize
+        return blockId == blockCount - 1 ? blockLastSize : blockSize
     }
     
     func chunkOfId(blockId : Int) -> RPutChunkSucc {
@@ -193,7 +184,7 @@ struct RPutCtx {
     
     func workOfId(blockId : Int) -> Async<Ret<RPutChunkSucc>> {
         return RPutBlockCtx(self, blockId, blockSizeOfId(blockId),
-            chunkOfId(blockId), notify).work()
+            chunkOfId(blockId)).work()
     }
     
     func mkfile(ss : [RPutChunkSucc]) -> Async<Ret<PutSucc>> {
@@ -219,7 +210,7 @@ struct RPutCtx {
     func rput() -> Async<Ret<PutSucc>> {
         let limit = min(extra.worker, blockCount)
         let works = (0 ..< blockCount).map(workOfId)
-        return limitedParallel(limit, Ret<RPutChunkSucc>(), works)
+        return limitedParallel(limit, works)
         .bind(.Sync) { rets -> Async<Ret<PutSucc>> in
             if rets.all({ $0.check() }) {
                 let ss = rets.flatMap({ $0.toOptional() })
@@ -247,7 +238,7 @@ public extension Client {
         path : String,
         extra : RPutExtra
     ) -> Async<Ret<PutSucc>> {
-        let ch = Channel(path: path, oflag: O_RDONLY)
+        let ch = try! Channel(path: path, oflag: O_RDONLY)
         return rput(token: token, key: key, channel: ch, extra: extra)
     }
 }

@@ -9,7 +9,8 @@ public extension Client {
         req.HTTPMethod = "GET"
         return responseDownload(req).bindRet(.Sync)
         { (resp, url) in
-            if accepted(resp.statusCode) {
+            print("resp", resp.allHeaderFields)
+            if resp.accepted {
                 try File.move(src: url.path!, dst: path)
                 return .Succ(())
             } else {

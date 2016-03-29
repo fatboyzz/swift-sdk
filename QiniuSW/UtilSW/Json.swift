@@ -1,23 +1,5 @@
 import Foundation
 
-public func empty(obj : Any) -> Bool {
-    switch obj {
-    case let n as Int8: return n == 0
-    case let n as Int16: return n == 0
-    case let n as Int32: return n == 0
-    case let n as Int64: return n == 0
-    case let n as UInt8: return n == 0
-    case let n as UInt16: return n == 0
-    case let n as UInt32: return n == 0
-    case let n as UInt64: return n == 0
-    case let n as NSNumber: return n == 0
-    case let s as NSString: return s.length == 0
-    case let a as NSArray: return a.count == 0
-    case let d as NSDictionary: return d.count == 0
-    default: return false
-    }
-}
-
 public protocol CustomJobj {
     func toJobj(d : NSMutableDictionary)
     func fromJobj(d : NSMutableDictionary)

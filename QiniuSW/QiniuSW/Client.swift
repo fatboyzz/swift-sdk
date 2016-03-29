@@ -121,10 +121,6 @@ public enum Ret<T> {
     case Succ(T)
     case Fail(Error)
     
-    public init() {
-        self = .Fail(Error("Uninitialized Ret"))
-    }
-    
     public func map<R>(@noescape f : T throws -> R) throws -> Ret<R> {
         switch self {
         case .Succ(let t):
@@ -162,10 +158,6 @@ public enum Ret<T> {
     }
 }
 
-func accepted(status : Int) -> Bool {
-    return status / 100 == 2
-}
-
 func requestUrl(url : String) -> NSMutableURLRequest {
     let req = NSMutableURLRequest(URL: NSURL(string: url)!)
     req.setHeader("User-Agent", userAgent)
@@ -179,8 +171,10 @@ public class Client {
     
     public init(_ config : Config) {
         self.config = config
-        mac = Mac(config)
-        session = Session()
+        self.mac = Mac(config)
+        let c = NSURLSessionConfiguration.defaultSessionConfiguration()
+        c.requestCachePolicy = .ReloadIgnoringLocalCacheData
+        self.session = Session(c)
     }
     
     public func token<T>(obj : T) -> String {
@@ -208,7 +202,7 @@ extension Client {
     ) -> Async<Ret<Succ>> {
         return responseData(req).bindRet(.Sync)
         { (resp, data) -> Ret<Succ> in
-            if accepted(resp.statusCode) {
+            if resp.accepted {
                 return .Succ(jsonToObj(zero, data))
             } else {
                 return .Fail(jsonToObj(Error(), data))

@@ -37,8 +37,14 @@ public class Channel {
         self.size = Channel.size(self.channel)
     }
     
-    public convenience init(path : String, oflag : Int32) {
-        self.init(fd : open(path, oflag))
+    public convenience init(
+        path : String,
+        oflag : Int32,
+        mode : mode_t = 0o644
+    ) throws {
+        let fd = open(path, oflag, 0o644)
+        if fd < 0 { throw posixError() }
+        self.init(fd : fd)
     }
     
     deinit {
@@ -71,8 +77,7 @@ public class Channel {
                 self.channel, offset, data.data, qUtility()
             ) { (done, _, err) in
                 if err > 0 {
-                    let e = NSError(domain: NSPOSIXErrorDomain, code: Int(err), userInfo: nil)
-                    p.econ(.Exception(e))
+                    p.econ(.Exception(posixError(err)))
                     return
                 }
                 if done { p.con() }
@@ -81,8 +86,11 @@ public class Channel {
     }
     
     public func copyTo(
-        other : Channel, srcOffset : Int64 = 0, dstOffset : Int64 = 0,
-        count : Int = Int.max, limit : Int = 1 << 22 // 4M
+        other : Channel,
+        srcOffset : Int64 = 0,
+        dstOffset : Int64 = 0,
+        count : Int = Int.max,
+        limit : Int = 1 << 22 // 4M
     ) -> Async<()> {
         if count <= 0 { return ret(()) }
         let reqc = min(count, limit)
@@ -101,5 +109,4 @@ public class Channel {
             }
         }
     }
-    
 }

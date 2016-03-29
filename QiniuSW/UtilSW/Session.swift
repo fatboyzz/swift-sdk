@@ -9,13 +9,12 @@ public typealias HttpResponseDownload = (NSHTTPURLResponse, NSURL)
 public class Session {
     let session : NSURLSession
 
-    public init() {
-        let c = NSURLSessionConfiguration.defaultSessionConfiguration()
+    public init(_ c : NSURLSessionConfiguration) {
         session = NSURLSession(configuration: c)
     }
     
-    public init(c : NSURLSessionConfiguration) {
-        session = NSURLSession(configuration: c)
+    public convenience init() {
+        self.init(NSURLSessionConfiguration.defaultSessionConfiguration())
     }
     
     public func responseData(

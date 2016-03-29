@@ -3,6 +3,4 @@ import QiniuSW
 
 class RSTests: XCTestCase {
     
-    
-    
 }

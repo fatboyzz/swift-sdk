@@ -71,7 +71,8 @@ public enum Dispatcher {
 
 func dispatch(d : Dispatcher, _ block : dispatch_block_t) {
     switch d {
-    case .Sync: block();
+    case .Sync:
+        block()
         break
     case .SyncAfter(let ms):
         NSThread.sleepForTimeInterval(Double(ms) / 1000.0)
@@ -107,15 +108,11 @@ public enum Escape {
     case Timeout
 }
 
-public class Box<T> {
-    var value : T
-    public init(_ value : T) { self.value = value }
-}
-
-public class CancelToken : Box<Bool> {
-    public init() { super.init(false) }
-    public func Cancel() { value = true }
-    public func Canceled() -> Bool { return value }
+public class CancelToken {
+    var cancel : Bool
+    public init() { cancel = false }
+    public func Cancel() { cancel = true }
+    public func Canceled() -> Bool { return cancel }
 }
 
 class Context {
@@ -318,20 +315,20 @@ public func parallel<T>(arr : [Async<T>]) -> Async<[T]> {
 class Worker<T> {
     let arr : [Async<T>]
     var skip : Int32
-    var rs : [T]
+    var rs : [T?]
     
-    init(_ zero : T, _ arr : [Async<T>]) {
+    init(_ arr : [Async<T>]) {
         self.arr = arr
         skip = 0
-        rs = Array.init(count: arr.count, repeatedValue: zero)
+        rs = Array.init(count: arr.count, repeatedValue: nil)
     }
     
     func work() -> Async<()> {
         return delay(.Utility) {
             let index = Int(OSAtomicIncrement32(&self.skip)) - 1
             if index < self.arr.count {
-                return self.arr[index].bind(.Sync) { (r : T) in
-                    self.rs[index] = r
+                return self.arr[index].bind(.Sync) { r in
+                    self.rs[index] = .Some(r)
                     return self.work()
                 }
             } else {
@@ -341,19 +338,21 @@ class Worker<T> {
     }
 }
 
-public func serial<T>(zero : T, _ arr : [Async<T>]) -> Async<[T]> {
+public func serial<T>(arr : [Async<T>]) -> Async<[T]> {
     return delay(.Sync) {
-        let w = Worker(zero, arr)
-        return w.work().bindRet(.Sync, { _ in return w.rs })
+        let w = Worker(arr)
+        return w.work().bindRet(.Sync) { _ in
+            return w.rs.flatMap(id)
+        }
     }
 }
 
-public func limitedParallel<T>(
-    limit : Int, _ zero : T, _ arr : [Async<T>]
-) -> Async<[T]> {
+public func limitedParallel<T>(limit : Int, _ arr : [Async<T>]) -> Async<[T]> {
     return delay(.Sync) {
-        let w = Worker(zero, arr)
+        let w = Worker(arr)
         let ws = Array(count: limit, repeatedValue: w.work())
-        return parallel(ws).bindRet(.Sync) { _ in return w.rs }
+        return parallel(ws).bindRet(.Sync) { _ in
+            return w.rs.flatMap(id)
+        }
     }
 }

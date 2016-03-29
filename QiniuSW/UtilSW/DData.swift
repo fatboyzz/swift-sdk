@@ -22,7 +22,7 @@ public struct DData {
             memcpy(&dst[offset], src, count)
             return true
         }
-        return Bytes(dst)
+        return Bytes(data: dst)
     }
     
     public func toNSData() -> NSData {
