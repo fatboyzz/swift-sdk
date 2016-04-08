@@ -128,3 +128,58 @@ public extension SequenceType {
     }
 }
 
+public typealias ResponseData = (NSURLResponse, NSData)
+public typealias HttpResponseData = (NSHTTPURLResponse, NSData)
+
+public typealias ResponseDownload = (NSURLResponse, NSURL)
+public typealias HttpResponseDownload = (NSHTTPURLResponse, NSURL)
+
+extension NSURLSession {
+    public func responseData(
+        req : NSURLRequest
+    ) -> Async<ResponseData> {
+        return Async<ResponseData>
+        { (p : Param<ResponseData>) in
+            self.dataTaskWithRequest(req)
+            { (data, resp, err) in
+                if err != nil {
+                    p.econ(.Exception(err!))
+                    return
+                }
+                p.con(resp!, data!)
+            }.resume()
+        }
+    }
+    
+    public func responseDownload(
+        req : NSURLRequest
+    ) -> Async<ResponseDownload> {
+        return Async<ResponseDownload>
+        { (p : Param<ResponseDownload>) in
+            self.downloadTaskWithRequest(req)
+            { (url, resp, err) in
+                if err != nil {
+                    p.econ(.Exception(err!))
+                    return
+                }
+                p.con(resp!, url!)
+            }.resume()
+        }
+    }
+    
+    public func reponseUpload(
+        req : NSURLRequest, data : NSData?
+    ) -> Async<ResponseData> {
+        return Async<ResponseData>
+        { (p : Param<ResponseData>) in
+            self.uploadTaskWithRequest(req, fromData: data)
+            { (data, resp, err) in
+                if err != nil {
+                    p.econ(.Exception(err!))
+                    return
+                }
+                p.con(resp!, data!)
+            }.resume()
+        }
+    }
+}

@@ -10,10 +10,11 @@ class TestConfig : NSObject {
 }
 
 let testPathKey = "QiniuTestPath"
+
+let testBundle = NSBundle(forClass: QiniuSWTests.self)
     
 let testPath = { () -> String in
-    let bundle = NSBundle(forClass: QiniuSWTests.self)
-    return bundle.infoDictionary![testPathKey] as! String
+    return testBundle.infoDictionary![testPathKey] as! String
 }()
     
 let testConfig = "\(testPath)/TestConfig.json"
@@ -43,7 +44,8 @@ class RandomData {
     let qetag : String
     
     static func genData(path : String, size : Int) -> Bool {
-        if File.exist(path) { return false }
+        let mgr = NSFileManager.defaultManager()
+        if mgr.fileExistsAtPath(path) { return false }
         let ch = Channel(fd: creat(path, 0o644))
         let r = try! Channel(path: "/dev/random", oflag: O_RDONLY)
         r.copyTo(ch, count: size).runSync()

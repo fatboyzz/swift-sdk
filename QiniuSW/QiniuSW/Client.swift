@@ -167,14 +167,14 @@ func requestUrl(url : String) -> NSMutableURLRequest {
 public class Client {
     let config : Config
     let mac : Mac
-    let session : Session
+    let session : NSURLSession
     
     public init(_ config : Config) {
         self.config = config
         self.mac = Mac(config)
         let c = NSURLSessionConfiguration.defaultSessionConfiguration()
         c.requestCachePolicy = .ReloadIgnoringLocalCacheData
-        self.session = Session(c)
+        self.session = NSURLSession(configuration: c)
     }
     
     public func token<T>(obj : T) -> String {

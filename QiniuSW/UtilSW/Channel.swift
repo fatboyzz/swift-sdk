@@ -98,8 +98,7 @@ public class Channel {
         { (data : DData) in
             let recvc = data.count
             if recvc == 0 { return ret(()) }
-            return other.writeAt(dstOffset, data).bind(.Sync)
-            {
+            return other.writeAt(dstOffset, data).bind(.Sync) {
                 return self.copyTo(other,
                     srcOffset: srcOffset + recvc,
                     dstOffset: dstOffset + recvc,

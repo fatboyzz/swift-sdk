@@ -24,7 +24,7 @@ class IOTests: XCTestCase {
         let downPath = "\(testPath)/\(key)"
         
         c.downFile(
-            downUrl, path: downPath
+            url: downUrl, path: downPath
         ).bind(.Sync) { r -> Async<String> in
             XCTAssert(r.check())
             return QETag.hash(path: downPath)

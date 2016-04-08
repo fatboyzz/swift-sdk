@@ -58,6 +58,8 @@ public func qUtility() -> dispatch_queue_t {
     return dispatch_get_global_queue(QOS_CLASS_UTILITY, 0)
 }
 
+public typealias DispatchBlock = () -> ()
+
 public enum Dispatcher {
     case Sync
     case SyncAfter(ms : Int64)
@@ -67,9 +69,10 @@ public enum Dispatcher {
     case MainAfter(ms : Int64)
     case Utility
     case UtilityAfter(ms : Int64)
+    case Custom(c : DispatchBlock -> ())
 }
 
-func dispatch(d : Dispatcher, _ block : dispatch_block_t) {
+func dispatch(d : Dispatcher, _ block : DispatchBlock) {
     switch d {
     case .Sync:
         block()
@@ -97,15 +100,10 @@ func dispatch(d : Dispatcher, _ block : dispatch_block_t) {
     case .UtilityAfter(let ms):
         dispatch(.AsyncAfter(ms: ms, q: qUtility()), block)
         break
+    case .Custom(let c):
+        c(block)
+        break
     }
-}
-
-
-public enum Escape {
-    case Success
-    case Exception(ErrorType)
-    case Cancelled
-    case Timeout
 }
 
 public class CancelToken {
@@ -129,6 +127,17 @@ class Context {
         self.timeout = timeout
         self.start = start
     }
+    
+    func isTimeout() -> Bool {
+        return timeout > 0 && start.timeIntervalSinceNow > timeout
+    }
+}
+
+public enum Escape {
+    case Success
+    case Exception(ErrorType)
+    case Cancelled
+    case Timeout
 }
 
 public class Param<T> {
@@ -150,21 +159,23 @@ public class Param<T> {
 public struct Async<T> {
     private let work : Param<T> -> ()
     
-    init (_ work : Param<T> -> ()) {
-        self.work = work
-    }
-    
-    public init (_ task : Param<T> throws -> ()) {
+    public init(_ task : Param<T> -> ()) {
         self.work = { (p : Param<T>) in
             let ctx = p.ctx
             if ctx.ct.Canceled() {
                 p.econ(Escape.Cancelled)
                 return
             }
-            if ctx.timeout > 0 && ctx.start.timeIntervalSinceNow > ctx.timeout {
+            if ctx.isTimeout() {
                 p.econ(Escape.Timeout)
                 return
             }
+            task(p)
+        }
+    }
+    
+    public init(_ task : Param<T> throws -> ()) {
+        self.init { (p : Param<T>) in
             do {
                 try task(p)
             } catch let e {
@@ -173,11 +184,11 @@ public struct Async<T> {
         }
     }
     
-    init (_ con : () throws -> Async<T>) {
+    public init(_ con : () throws -> Async<T>) {
         self.init { p in try con().work(p) }
     }
     
-    init<R>(_ r : R, _ con : R throws -> Async<T>) {
+    public init<R>(_ r : R, _ con : R throws -> Async<T>) {
         self.init { p in try con(r).work(p) }
     }
     
@@ -219,29 +230,36 @@ public func ret<T>(value : T) -> Async<T> {
 
 public func delay<T>(
     d : Dispatcher,
-    _ con : () throws -> Async<T>
+    _ task : () throws -> Async<T>
 ) -> Async<T> {
-    return Async<T> { p in dispatch(d) { Async<T>(con).work(p) } }
+    return Async<T> { p in
+        dispatch(d) { Async<T>(task).work(p) }
+    }
 }
 
 public func delayRet<T>(
     d : Dispatcher,
-    _ con : () throws -> T
+    _ task : () throws -> T
 ) -> Async<T> {
-    return delay(d, { return ret(try con()) })
+    return delay(d, { return ret(try task()) })
 }
 
 public func delayClean<T>(
     d : Dispatcher,
-    _ con : () throws -> Async<T>,
+    _ task : () throws -> Async<T>,
     _ clean : () -> ()
 ) -> Async<T> {
-    return Async<T> { p in dispatch(d) {
-        let necon = { (e : Escape) in clean(); p.econ(e) }
-        Async<T>(con).work(
-            Param<T>(ctx: p.ctx, con: p.con, econ: necon)
-        )
-    }}
+    return Async<T> { p in
+        dispatch(d) {
+            let necon = { (e : Escape) in
+                clean()
+                p.econ(e)
+            }
+            Async<T>(task).work(
+                Param<T>(ctx: p.ctx, con: p.con, econ: necon)
+            )
+        }
+    }
 }
 
 public extension Async {
@@ -250,8 +268,10 @@ public extension Async {
         _ con : T throws -> Async<U>
     ) -> Async<U> {
         return Async<U> { (p : Param<U>) in
-            let ncon = { (t : T) in dispatch(d) {
-                Async<U>(t, con).work(p) }
+            let ncon = { (t : T) in
+                dispatch(d) {
+                    Async<U>(t, con).work(p)
+                }
             }
             self.work(Param<T>(ctx: p.ctx, con: ncon, econ: p.econ))
         }
@@ -271,26 +291,23 @@ public extension Async {
     ) -> Async<U> {
         return Async<U> { (p : Param<U>) in
             let ncon = { (t : T) in
-                dispatch(d) { Async<U>(t, con).work(p) }
+                dispatch(d) {
+                    Async<U>(t, con).work(p)
+                }
             }
-            let necon = { (e : Escape) in clean(); p.econ(e) }
+            let necon = { (e : Escape) in
+                clean()
+                p.econ(e)
+            }
             self.work(Param<T>(ctx: p.ctx, con: ncon, econ: necon))
         }
-    }
-    
-    public func bindCleanRet<U>(
-        d : Dispatcher,
-        _ con : T throws -> U,
-        _ clean : () -> ()
-    ) -> Async<U> {
-        return bindClean(d, { t in ret(try con(t)) }, clean)
     }
 }
 
 public func parallel<T>(arr : [Async<T>]) -> Async<[T]> {
     return Async<[T]> { (p : Param) in
         let c = arr.count
-        var rs : [T?] = Array.init(count: c, repeatedValue: nil)
+        var rs : [T?] = Array(count: c, repeatedValue: nil)
         var finished = Int32(0)
         var failed = Int32(0)
         for i in 0 ..< rs.count {
@@ -320,11 +337,11 @@ class Worker<T> {
     init(_ arr : [Async<T>]) {
         self.arr = arr
         skip = 0
-        rs = Array.init(count: arr.count, repeatedValue: nil)
+        rs = Array(count: arr.count, repeatedValue: nil)
     }
     
     func work() -> Async<()> {
-        return delay(.Utility) {
+        return delay(.Sync) {
             let index = Int(OSAtomicIncrement32(&self.skip)) - 1
             if index < self.arr.count {
                 return self.arr[index].bind(.Sync) { r in
@@ -339,20 +356,18 @@ class Worker<T> {
 }
 
 public func serial<T>(arr : [Async<T>]) -> Async<[T]> {
-    return delay(.Sync) {
-        let w = Worker(arr)
-        return w.work().bindRet(.Sync) { _ in
-            return w.rs.flatMap(id)
-        }
+    let w = Worker(arr)
+    return w.work().bindRet(.Sync) { _ in
+        return w.rs.flatMap(id)
     }
 }
 
-public func limitedParallel<T>(limit : Int, _ arr : [Async<T>]) -> Async<[T]> {
-    return delay(.Sync) {
-        let w = Worker(arr)
-        let ws = Array(count: limit, repeatedValue: w.work())
-        return parallel(ws).bindRet(.Sync) { _ in
-            return w.rs.flatMap(id)
-        }
+public func limitedParallel<T>(
+    limit : Int, _ arr : [Async<T>]
+) -> Async<[T]> {
+    let w = Worker(arr)
+    let ws = Array(count: limit, repeatedValue: w.work())
+    return parallel(ws).bindRet(.Sync) { _ in
+        return w.rs.flatMap(id)
     }
 }

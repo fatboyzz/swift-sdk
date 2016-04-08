@@ -76,7 +76,7 @@ private func parseItem(op : Op, item : NSDictionary) -> Ret<OpSucc> {
 }
 
 extension Client {
-    private func requestOp(url : String) -> NSMutableURLRequest {
+    func requestOp(url : String) -> NSMutableURLRequest {
         let req = requestUrl(url)
         req.HTTPMethod = "GET"
         req.setHeader("Content-Type", "application/x-www-form-urlencoded")
@@ -123,10 +123,7 @@ extension Client {
         return responseRet(FetchSucc(), req)
     }
 
-    public func changeMime(
-        mime mime : String,
-        en : Entry
-    ) -> Async<Ret<()>> {
+    public func changeMime(mime mime : String, en : Entry) -> Async<Ret<()>> {
         let host = config.rsHost
         let chgm = "/chgm/\(en.encoded)"
         let mime = "/mime/\(mime.base64Urlsafe())"

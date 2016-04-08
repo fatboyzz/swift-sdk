@@ -1,7 +1,6 @@
 import Foundation
 
 public struct Crc32 {
-    
     static func makeTable(poly : UInt32) -> [UInt32] {
         var r = Array(count: 256, repeatedValue: UInt32(0))
         for i in 0 ..< 256 {
@@ -18,7 +17,7 @@ public struct Crc32 {
         return r
     }
     
-    static let ieeePoly = UInt32(0xedb88320)
+    static let ieeePoly = 0xedb88320 as UInt32
     static let ieeeTable = Crc32.makeTable(ieeePoly)
     public static let ieee = Crc32(table : Crc32.ieeeTable)
     
@@ -32,5 +31,4 @@ public struct Crc32 {
         }
         return ~crc
     }
-    
 }

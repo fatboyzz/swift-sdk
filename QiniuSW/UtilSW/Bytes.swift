@@ -72,7 +72,9 @@ public struct Bytes {
     public func toString(
         encoding : NSStringEncoding = NSUTF8StringEncoding
     ) -> String {
-        return String(bytes: data, encoding: encoding)!
+        return NSString(
+            bytes: data, length: data.count, encoding: encoding
+        )! as String
     }
     
     public func toDData() -> DData {
