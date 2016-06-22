@@ -1,5 +1,6 @@
 import Foundation
 
+// Singleton = Lazy + Global
 public struct Singleton<T> {
     let gen : () -> T
     var pred = 0
@@ -10,11 +11,9 @@ public struct Singleton<T> {
     }
     
     public mutating func instance() -> T {
-        return withUnsafeMutablePointer(&pred) { p in
-            dispatch_once(&pred) {
-                self.value = self.gen()
-            }
-            return value!
+        dispatch_once(&pred) {
+            self.value = self.gen()
         }
+        return value!
     }
 }

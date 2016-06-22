@@ -7,22 +7,33 @@ public class RDownChunkSucc : NSObject {
 
 public class RDownProgress : NSObject {
     public var blockId = 0
-    public var blockSize = 0
-    public var ret = RDownChunkSucc()
+    public var blockSize = 0 // safe to omit when serializing
+    public var chunkSize = 0 // safe to omit when serializing
+    public var succ = RDownChunkSucc()
 }
 
-public func cleanRDownProgresses(ps : [RDownProgress]) -> [RDownProgress] {
+public func cleanRDownProgresses(
+    ps : [RDownProgress]
+) -> [RDownProgress] {
     return ps.reverse().distinct({ $0.blockId }).reverse()
 }
 
-public struct RDownExtra {
+public func sentRDownProgresses(
+    ps : [RDownProgress]
+) -> Int64 {
+    return cleanRDownProgresses(ps).reduce(0) { acc, p in
+        acc + Int64(p.succ.offset)
+    }
+}
+
+public class RDownExtra {
     public var blockSize = 1 << 22 // 4M
     public var chunkSize = 1 << 20 // 1M
     public var tryTimes = 3
     public var worker = 2
     public var progresses = [RDownProgress]()
     public var notify : RDownProgress -> () = ignore
-    public init() { }
+    public init() {}
 }
 
 struct RDownBlockCtx {
@@ -61,33 +72,32 @@ struct RDownBlockCtx {
         return req
     }
     
-    func progress(offset : Int) -> RDownProgress {
+    func progress(size : Int, _ offset : Int) -> RDownProgress {
         let p = RDownProgress()
         p.blockId = blockId
         p.blockSize = blockSize
-        p.ret = RDownChunkSucc()
-        p.ret.offset = offset
+        p.chunkSize = size
+        p.succ = RDownChunkSucc()
+        p.succ.offset = offset
         return p
     }
     
     func chunk(offset : Int) -> Async<Ret<RDownChunkSucc>> {
-        let req = requestRange(offset, chunkSize(offset))
-        return rdownCtx.c.responseDownload(req)
-        .bind(.Sync) { (resp, url) in
+        let size = chunkSize(offset)
+        let req = requestRange(offset, size)
+        return rdownCtx.c.responseData(req)
+        .bind(.Sync) { (resp, data) in
             if !resp.accepted {
                 let msg = "Response chunk with status code \(resp.statusCode)"
                 return ret(.Fail(Error(msg)))
             }
-            let src = try! Channel(path: url.path!, oflag: O_RDONLY)
-            let size = src.size
-            return src.copyTo(
-                self.rdownCtx.ch,
-                srcOffset: 0,
-                dstOffset: self.blockStart + Int64(offset)
-            ).bindRet(.Sync) {
-                let p = self.progress(offset + Int(size))
+            let dstOffset = self.blockStart + Int64(offset)
+            let ddata = data.toDData()
+            return self.rdownCtx.ch.writeAt(dstOffset, ddata)
+            .bindRet(.Sync) {
+                let p = self.progress(size, offset + size)
                 self.notify(p)
-                return .Succ(p.ret)
+                return .Succ(p.succ)
             }
         }
     }
@@ -97,19 +107,15 @@ struct RDownBlockCtx {
     ) -> Async<Ret<RDownChunkSucc>> {
         return delay(.Sync) {
             switch cur {
+            case .Succ(let s) where s.offset == self.blockSize:
+                return ret(cur)
             case .Succ(let s):
-                if s.offset == self.blockSize {
-                    return ret(cur)
-                } else {
-                    return self.chunk(s.offset)
-                    .bind(.Sync) { self.loop(times, s, $0) }
-                }
+                return self.chunk(s.offset)
+                .bind(.Sync) { self.loop(times, s, $0) }
+            case .Fail(_) where times < self.rdownCtx.extra.tryTimes:
+                return self.loop(times + 1, prev, .Succ(prev))
             case .Fail(_):
-                if times < self.rdownCtx.extra.tryTimes {
-                    return self.loop(times + 1, prev, .Succ(prev))
-                } else {
-                    return ret(cur)
-                }
+                return ret(cur)
             }
         }
     }
@@ -160,7 +166,7 @@ struct RDownCtx {
     
     func chunkOfId(blockId : Int) -> RDownChunkSucc {
         if let index = progresses.indexOf({ $0.blockId == blockId }) {
-            return progresses[index].ret
+            return progresses[index].succ
         } else {
             return RDownChunkSucc()
         }
@@ -205,9 +211,7 @@ extension Client {
     }
 
     public func rdown (
-        url url : String,
-        extra : RDownExtra,
-        ch : Channel
+        url url : String, extra : RDownExtra, ch : Channel
     ) -> Async<Ret<()>> {
         return responseDummy(url).bind(.Sync) { r in
             switch r {
@@ -221,9 +225,7 @@ extension Client {
     }
     
     public func rdownFile(
-        url url : String,
-        extra : RDownExtra,
-        path : String
+        url url : String, extra : RDownExtra, path : String
     ) -> Async<Ret<()>> {
         return rdown(
             url: url,

@@ -1,31 +1,31 @@
 import Foundation
 import UtilSW
 
-public class StatSucc : NSObject, CustomJobj {
+public class StatSucc : NSObject, CustomJns {
     public var qetag = ""
     public var fsize = 0
     public var putTime = 0
     public var mimeType = ""
     public var endUser = ""
     
-    public func toJobj(d: NSMutableDictionary) {
+    public func toJns(d: NSMutableDictionary) {
         d.updateKey("qetag", newKey: "hash")
     }
     
-    public func fromJobj(d: NSMutableDictionary) {
+    public func fromJns(d: NSMutableDictionary) {
         d.updateKey("hash", newKey: "qetag")
     }
 }
 
-public class FetchSucc : NSObject, CustomJobj {
+public class FetchSucc : NSObject, CustomJns {
     public var qetag = ""
     public var key = ""
     
-    public func toJobj(d: NSMutableDictionary) {
+    public func toJns(d: NSMutableDictionary) {
         d.updateKey("qetag", newKey: "hash")
     }
     
-    public func fromJobj(d: NSMutableDictionary) {
+    public func fromJns(d: NSMutableDictionary) {
         d.updateKey("hash", newKey: "qetag")
     }
 }
@@ -64,11 +64,11 @@ private func parseItem(op : Op, item : NSDictionary) -> Ret<OpSucc> {
     switch (code / 100 == 2 , op) {
     case (false, _):
         let d = item.objectForKey("data")!
-        let e = jobjToObj(Error(), d) as! Error
+        let e = jnsToJmodel(Error(), d) as! Error
         return .Fail(e)
     case (_, .Stat(_)):
         let d = item.objectForKey("data")!
-        let s = jobjToObj(StatSucc(), d) as! StatSucc
+        let s = jnsToJmodel(StatSucc(), d) as! StatSucc
         return .Succ(.Stat(s))
     default:
         return .Succ(.Call)
@@ -136,7 +136,7 @@ extension Client {
         return responseData(req).bindRet(.Sync)
         { (resp, data) -> [Ret<OpSucc>] in
             if resp.accepted {
-                let items = jsonToJobj(data) as! [NSDictionary]
+                let items = jsonToJns(data) as! [NSDictionary]
                 return zip(ops, items).map(parseItem)
             } else {
                 return [Ret<OpSucc>]()

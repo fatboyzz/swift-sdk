@@ -94,12 +94,35 @@ public extension String {
         return Bytes(data: Array(utf8))
     }
     
+    public func urlQueryEncode() -> String {
+        return stringByAddingPercentEncodingWithAllowedCharacters(
+            NSCharacterSet.URLQueryAllowedCharacterSet()
+        )!
+    }
+    
     public func split(set : String) -> [String] {
         return unicodeScalars.split {
             set.unicodeScalars.contains($0)
         }.map(String.init)
     }
 }
+
+public extension SequenceType where Generator.Element == String {
+    @warn_unused_result
+    public func join(separator: String) -> String {
+        return joinWithSeparator(separator)
+    }
+}
+
+extension SequenceType where Generator.Element : SequenceType {
+    @warn_unused_result
+    public func join<
+        Separator : SequenceType where Separator.Generator.Element == Generator.Element.Generator.Element
+    >(separator: Separator) -> JoinSequence<Self> {
+        return joinWithSeparator(separator)
+    }
+}
+
 
 public extension SequenceType {
     typealias E = Self.Generator.Element
@@ -181,5 +204,17 @@ extension NSURLSession {
                 p.con(resp!, data!)
             }.resume()
         }
+    }
+}
+
+extension NSFileManager {
+    public func exists(path : String) -> Bool {
+        return fileExistsAtPath(path)
+    }
+    
+    public func isDirectory(path : String) -> Bool {
+        var d : ObjCBool = false
+        let ret = fileExistsAtPath(path, isDirectory: &d)
+        return ret && d
     }
 }

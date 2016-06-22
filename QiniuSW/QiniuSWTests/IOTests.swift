@@ -16,7 +16,6 @@ class IOTests: XCTestCase {
             path: small.path,
             extra: extra
         ).bindRet(.Sync) { r in
-            print("put finish")
             XCTAssert(r.check())
         }.runSync()
         
@@ -66,7 +65,7 @@ class IOTests: XCTestCase {
             path: big.path,
             extra: extra
         ).bindRet(.Sync) { r in
-            XCTAssert(r.check())
+            XCTAssertEqual((try! r.pick()).qetag, big.qetag)
         }.runSync()
         
         c.delete(en).runSync()

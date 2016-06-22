@@ -23,6 +23,26 @@ public func posixError(
     )
 }
 
+public func fileStat(path path : String) throws -> stat {
+    var buf = stat()
+    if stat(path, &buf) == -1 {
+        throw posixError()
+    }
+    return buf
+}
+
+public func fileStat(fd fd : Int32) throws -> stat {
+    var buf = stat()
+    if fstat(fd, &buf) == -1 {
+        throw posixError()
+    }
+    return buf
+}
+
+public func fileCanSeek(fd fd : Int32) -> Bool {
+    return lseek(fd, 0, SEEK_CUR) != -1
+}
+
 public func uninited<T>() -> T {
     return UnsafeMutablePointer<T>.alloc(sizeof(T.self)).move()
 }
@@ -50,4 +70,16 @@ public func empty(obj : Any) -> Bool {
     }
 }
 
+
+public protocol ReferenceEquatable : class, Equatable {}
+
+public func ==<T : ReferenceEquatable>(lhs : T, rhs : T) -> Bool {
+    return lhs === rhs
+}
+
+public class Weak<T : AnyObject> {
+    public weak var value : T?
+    public init() { self.value = nil }
+    public init(_ value : T) { self.value = value }
+}
 

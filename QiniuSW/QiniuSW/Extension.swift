@@ -23,6 +23,7 @@ extension NSURL {
             buf.appendContentsOf(p)
         }
         if let q = query {
+            buf.appendContentsOf("?")
             buf.appendContentsOf(q)
         }
         return buf

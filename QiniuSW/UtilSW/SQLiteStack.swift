@@ -56,17 +56,50 @@ public class SQLiteStack {
     }
 }
 
-public func entityName<T : NSManagedObject>(t : T.Type) -> String {
-    let c = class_getName(t)
+public func entityTypeToName<T : NSManagedObject>(
+    entity : T.Type
+) -> String {
+    let c = class_getName(entity)
     let s = String(CString: c, encoding: NSUTF8StringEncoding)!
     return s.split(".").last!
 }
 
-extension NSManagedObjectContext {
-    public func create<T : NSManagedObject>(t : T.Type) -> T {
-        return NSEntityDescription.insertNewObjectForEntityForName(
-            entityName(t), inManagedObjectContext: self
-        ) as! T
+extension NSFetchRequest {
+    public convenience init<T : NSManagedObject>(
+        entity : T.Type, _ pred : NSPredicate? = nil
+    ) {
+        self.init(entityName: entityTypeToName(entity))
+        predicate = pred
     }
 }
 
+extension NSManagedObjectContext {
+    public func create<T : NSManagedObject>(entity : T.Type) -> T {
+        return NSEntityDescription.insertNewObjectForEntityForName(
+            entityTypeToName(entity), inManagedObjectContext: self
+        ) as! T
+    }
+    
+    public func fetch<T : NSManagedObject>(
+        entity : T.Type, _ pred : NSPredicate? = nil
+    ) throws -> [T] {
+        let req = NSFetchRequest(entityName: entityTypeToName(entity))
+        req.predicate = pred
+        return (try executeFetchRequest(req)) as! [T]
+    }
+    
+    public func fetch<T : NSManagedObject>(
+        entity : T.Type, _ id : NSManagedObjectID
+    ) -> T {
+        return objectWithID(id) as! T
+    }
+    
+    public func delete(id : NSManagedObjectID) {
+        deleteObject(objectWithID(id))
+    }
+    
+    public func delete(ids : [NSManagedObjectID]) throws {
+        let req = NSBatchDeleteRequest(objectIDs: ids)
+        try executeRequest(req)
+    }
+}

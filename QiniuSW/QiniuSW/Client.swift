@@ -68,7 +68,7 @@ class Mac {
     }
     
     func signWithObject<T>(o : T) -> String {
-        return signWithData(objToJson(o).toBytes())
+        return signWithData(jmodelToJson(o).toBytes())
     }
     
     func signRequest(req : NSURLRequest) -> String {
@@ -114,7 +114,9 @@ public class Error : NSObject, ErrorType {
         self.error = error
     }
     
-    public override var description: String { return error }
+    public override var description: String {
+        return error
+    }
 }
 
 public enum Ret<T> {
@@ -203,9 +205,9 @@ extension Client {
         return responseData(req).bindRet(.Sync)
         { (resp, data) -> Ret<Succ> in
             if resp.accepted {
-                return .Succ(jsonToObj(zero, data))
+                return .Succ(jsonToJmodel(zero, data))
             } else {
-                return .Fail(jsonToObj(Error(), data))
+                return .Fail(jsonToJmodel(Error(), data))
             }
         }
     }

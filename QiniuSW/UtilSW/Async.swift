@@ -1,55 +1,5 @@
 import Foundation
 
-public class Semaphore {
-    let sem : dispatch_semaphore_t
-    
-    public init(_ value : Int) {
-        sem = dispatch_semaphore_create(value)
-    }
-    
-    public func signal() {
-        dispatch_semaphore_signal(sem)
-    }
-    
-    public func wait(
-        timeout : dispatch_time_t = DISPATCH_TIME_FOREVER
-    ) {
-        dispatch_semaphore_wait(sem, timeout)
-    }
-}
-
-public class Mutex {
-    let sem : dispatch_semaphore_t
-    
-    public init() {
-        sem = dispatch_semaphore_create(1)
-    }
-    
-    public func lock() {
-        dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER)
-    }
-    
-    public func unlock() {
-        dispatch_semaphore_signal(sem)
-    }
-}
-
-public func lock<T>(
-    m : Mutex, @noescape _ block: () -> T
-) -> T {
-    m.lock()
-    defer { m.unlock() }
-    return block()
-}
-
-public func lock<T>(
-    m : Mutex, @noescape _ block : () throws -> T
-) throws -> T {
-    m.lock()
-    defer { m.unlock() }
-    return try block()
-}
-
 public func qMain() -> dispatch_queue_t {
     return dispatch_get_main_queue()
 }
@@ -60,45 +10,56 @@ public func qUtility() -> dispatch_queue_t {
 
 public typealias DispatchBlock = () -> ()
 
+// s : second
+// ns : nano second
 public enum Dispatcher {
     case Sync
-    case SyncAfter(ms : Int64)
+    case SyncAfter(s : Double)
     case Async(q : dispatch_queue_t)
-    case AsyncAfter(ms : Int64, q : dispatch_queue_t)
+    case AsyncAfter(ns : Int64, q : dispatch_queue_t)
+    case AsyncAfterWallTime(ns : Int64, q : dispatch_queue_t)
+    case BarrierAsync(q : dispatch_queue_t)
     case Main
-    case MainAfter(ms : Int64)
+    case MainAfter(ns : Int64)
     case Utility
-    case UtilityAfter(ms : Int64)
+    case UtilityAfter(ns : Int64)
     case Custom(c : DispatchBlock -> ())
 }
 
-func dispatch(d : Dispatcher, _ block : DispatchBlock) {
+public func dispatch(d : Dispatcher, _ block : DispatchBlock) {
     switch d {
     case .Sync:
         block()
         break
-    case .SyncAfter(let ms):
-        NSThread.sleepForTimeInterval(Double(ms) / 1000.0)
+    case .SyncAfter(let s):
+        NSThread.sleepForTimeInterval(Double(s))
         dispatch(.Sync, block)
         break
     case .Async(let q):
         dispatch_async(q, block)
         break
-    case .AsyncAfter(let ms, let q):
-        let t = dispatch_time(DISPATCH_TIME_NOW, ms)
+    case .AsyncAfter(let ns, let q):
+        let t = dispatch_time(DISPATCH_TIME_NOW, ns)
         dispatch_after(t, q, block)
+        break
+    case .AsyncAfterWallTime(let ns, let q):
+        let t = dispatch_walltime(nil, ns)
+        dispatch_after(t, q, block)
+        break
+    case .BarrierAsync(let q):
+        dispatch_barrier_async(q, block)
         break
     case .Main:
         dispatch(.Async(q: qMain()), block)
         break
-    case .MainAfter(let ms):
-        dispatch(.AsyncAfter(ms: ms, q: qMain()), block)
+    case .MainAfter(let ns):
+        dispatch(.AsyncAfter(ns: ns, q: qMain()), block)
         break
     case .Utility:
         dispatch(.Async(q: qUtility()), block)
         break
-    case .UtilityAfter(let ms):
-        dispatch(.AsyncAfter(ms: ms, q: qUtility()), block)
+    case .UtilityAfter(let ns):
+        dispatch(.AsyncAfter(ns: ns, q: qUtility()), block)
         break
     case .Custom(let c):
         c(block)
@@ -156,43 +117,56 @@ public class Param<T> {
     }
 }
 
-public struct Async<T> {
+public class Async<T> {
     private let work : Param<T> -> ()
     
+    @warn_unused_result
     public init(_ task : Param<T> -> ()) {
-        self.work = { (p : Param<T>) in
+        work = { (p : Param<T>) in
             let ctx = p.ctx
             if ctx.ct.Canceled() {
-                p.econ(Escape.Cancelled)
+                p.econ(.Cancelled)
                 return
             }
             if ctx.isTimeout() {
-                p.econ(Escape.Timeout)
+                p.econ(.Timeout)
                 return
             }
             task(p)
         }
     }
     
-    public init(_ task : Param<T> throws -> ()) {
+    @warn_unused_result
+    public convenience init(
+        _ task : Param<T> throws -> ()
+    ) {
         self.init { (p : Param<T>) in
             do {
                 try task(p)
             } catch let e {
-                p.econ(Escape.Exception(e))
+                p.econ(.Exception(e))
             }
         }
     }
     
-    public init(_ con : () throws -> Async<T>) {
+    @warn_unused_result
+    public convenience init(
+        _ con : () throws -> Async<T>
+    ) {
         self.init { p in try con().work(p) }
     }
     
-    public init<R>(_ r : R, _ con : R throws -> Async<T>) {
+    @warn_unused_result
+    public convenience init<R>(
+        _ r : R, _ con : R throws -> Async<T>
+    ) {
         self.init { p in try con(r).work(p) }
     }
     
-    func run(ctx : Context, econ : Escape -> ()) {
+    func run(
+        ctx : Context,
+        econ : Escape -> ()
+    ) {
         let con = { (_ : T) in econ(.Success) }
         work(Param<T>(ctx: ctx, con: con, econ: econ))
     }
@@ -200,7 +174,7 @@ public struct Async<T> {
     public func run(
         ct ct : CancelToken = CancelToken(),
         timeout : NSTimeInterval = -1.0,
-        econ : Escape -> ()
+        econ : Escape -> () = ignore
     ) {
         let ctx = Context(ct : ct, timeout : timeout, start : NSDate())
         run(ctx, econ: econ)
@@ -212,7 +186,7 @@ public struct Async<T> {
     ) -> (T?, Escape) {
         let s = Semaphore(0)
         var ret : T? = nil
-        var esc : Escape = .Success
+        var esc : Escape? = nil
         bindRet(.Sync) { t in
             ret = t
         }.run(ct: ct, timeout: timeout) { e in
@@ -220,46 +194,36 @@ public struct Async<T> {
             s.signal()
         }
         s.wait()
-        return (ret, esc)
+        return (ret, esc!)
     }
 }
 
+@warn_unused_result
 public func ret<T>(value : T) -> Async<T> {
     return Async<T> { p in p.con(value) }
 }
 
+@warn_unused_result
+public func dummy() -> Async<()> {
+    return ret(())
+}
+
+@warn_unused_result
 public func delay<T>(
     d : Dispatcher,
-    _ task : () throws -> Async<T>
+    _ con : () throws -> Async<T>
 ) -> Async<T> {
     return Async<T> { p in
-        dispatch(d) { Async<T>(task).work(p) }
+        dispatch(d) { Async<T>(con).work(p) }
     }
 }
 
+@warn_unused_result
 public func delayRet<T>(
     d : Dispatcher,
-    _ task : () throws -> T
+    _ con : () throws -> T
 ) -> Async<T> {
-    return delay(d, { return ret(try task()) })
-}
-
-public func delayClean<T>(
-    d : Dispatcher,
-    _ task : () throws -> Async<T>,
-    _ clean : () -> ()
-) -> Async<T> {
-    return Async<T> { p in
-        dispatch(d) {
-            let necon = { (e : Escape) in
-                clean()
-                p.econ(e)
-            }
-            Async<T>(task).work(
-                Param<T>(ctx: p.ctx, con: p.con, econ: necon)
-            )
-        }
-    }
+    return delay(d) { return ret(try con()) }
 }
 
 public extension Async {
@@ -269,9 +233,7 @@ public extension Async {
     ) -> Async<U> {
         return Async<U> { (p : Param<U>) in
             let ncon = { (t : T) in
-                dispatch(d) {
-                    Async<U>(t, con).work(p)
-                }
+                dispatch(d) { Async<U>(t, con).work(p) }
             }
             self.work(Param<T>(ctx: p.ctx, con: ncon, econ: p.econ))
         }
@@ -281,29 +243,20 @@ public extension Async {
         d : Dispatcher,
         _ con : T throws -> U
     ) -> Async<U> {
-        return bind(d, { t in ret(try con(t)) })
+        return bind(d) { t in ret(try con(t)) }
     }
     
-    public func bindClean<U>(
-        d : Dispatcher,
-        _ con : T throws -> Async<U>,
-        _ clean : () -> ()
-    ) -> Async<U> {
-        return Async<U> { (p : Param<U>) in
-            let ncon = { (t : T) in
-                dispatch(d) {
-                    Async<U>(t, con).work(p)
-                }
-            }
-            let necon = { (e : Escape) in
-                clean()
-                p.econ(e)
-            }
-            self.work(Param<T>(ctx: p.ctx, con: ncon, econ: necon))
+    public func bindClean(
+        clean : Escape -> ()
+    ) -> Async<T> {
+        return Async<T> { (p : Param<T>) in
+            let necon = { (e : Escape) in clean(e); p.econ(e) }
+            self.work(Param<T>(ctx: p.ctx, con: p.con, econ: necon))
         }
     }
 }
 
+@warn_unused_result
 public func parallel<T>(arr : [Async<T>]) -> Async<[T]> {
     return Async<[T]> { (p : Param) in
         let c = arr.count
@@ -316,11 +269,12 @@ public func parallel<T>(arr : [Async<T>]) -> Async<[T]> {
                 if OSAtomicIncrement32(&finished) == Int32(c) {
                     p.con(rs.flatMap(id))
                 }
-            }.run(p.ctx) { (e : Escape) in
+            }.run(p.ctx) { e in
                 switch e {
                 case .Success: break
                 default:
                     if OSAtomicIncrement32(&failed) == 1 {
+                        p.ctx.ct.Cancel()
                         p.econ(e)
                     }
                 }
@@ -355,6 +309,7 @@ class Worker<T> {
     }
 }
 
+@warn_unused_result
 public func serial<T>(arr : [Async<T>]) -> Async<[T]> {
     let w = Worker(arr)
     return w.work().bindRet(.Sync) { _ in
@@ -362,6 +317,7 @@ public func serial<T>(arr : [Async<T>]) -> Async<[T]> {
     }
 }
 
+@warn_unused_result
 public func limitedParallel<T>(
     limit : Int, _ arr : [Async<T>]
 ) -> Async<[T]> {

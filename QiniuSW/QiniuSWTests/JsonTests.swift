@@ -1,6 +1,10 @@
 import XCTest
 import UtilSW
 
+class EEE : NSObject {
+    var e = 0
+}
+
 class JJJ : NSObject {
     var n0 = 0
     var n1 = UInt(1)
@@ -10,7 +14,10 @@ class JJJ : NSObject {
     var d = 3.5
     var b = true
     var s = "hello"
+    var n = NSNumber(integer: 100)
     var arr = [1, 2, 3]
+    var kv = [ "foo" : 100, "bar" : 200 ]
+    var es = [ EEE(), EEE() ]
 }
 
 func == (lhs : JJJ, rhs : JJJ) -> Bool {
@@ -23,15 +30,18 @@ func == (lhs : JJJ, rhs : JJJ) -> Bool {
         lhs.d == rhs.d &&
         lhs.b == rhs.b &&
         lhs.s == rhs.s &&
-        lhs.arr == rhs.arr
+        lhs.n.integerValue == rhs.n.integerValue &&
+        lhs.arr == rhs.arr &&
+        lhs.kv["foo"] == rhs.kv["foo"] &&
+        lhs.es[0].e == rhs.es[0].e
 }
 
 class JsonTests: XCTestCase {
 
     func testJson() {
         let a = JJJ()
-        let b = jsonToObj(JJJ(), objToJson(a))
+        let b = jsonToJmodel(JJJ(), jmodelToJson(a))
         XCTAssert(a == b)
     }
-
+    
 }

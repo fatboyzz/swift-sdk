@@ -36,11 +36,15 @@
 		E281D5261C9D7047005A017D /* RIO.swift in Sources */ = {isa = PBXBuildFile; fileRef = E281D5251C9D7047005A017D /* RIO.swift */; };
 		E281D5281C9E0780005A017D /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = E281D5271C9E0780005A017D /* Util.swift */; };
 		E281D52A1CA49055005A017D /* D.swift in Sources */ = {isa = PBXBuildFile; fileRef = E281D5291CA49054005A017D /* D.swift */; };
+		E2AF9BB41CF7DFE30083759A /* AObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2AF9BB31CF7DFE30083759A /* AObserver.swift */; };
+		E2AF9BB61CF7E95E0083759A /* Lock.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2AF9BB51CF7E95E0083759A /* Lock.swift */; };
 		E2BB243E1CA5362600CD45AC /* RD.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2BB243D1CA5362600CD45AC /* RD.swift */; };
 		E2BB24401CA6535C00CD45AC /* Recorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2BB243F1CA6535C00CD45AC /* Recorder.swift */; };
 		E2BB244A1CAAA01B00CD45AC /* RSF.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2BB24491CAAA01A00CD45AC /* RSF.swift */; };
 		E2C9132B1C72D65B009E825F /* QiniuSW.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2C913201C72D65B009E825F /* QiniuSW.framework */; };
 		E2C913301C72D65B009E825F /* QiniuSWTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2C9132F1C72D65B009E825F /* QiniuSWTests.swift */; };
+		E2F858F51D176F9700A62158 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2F858F41D176F9600A62158 /* Logger.swift */; };
+		E2F858FB1D182B9F00A62158 /* Graph.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2F858FA1D182B9F00A62158 /* Graph.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -90,6 +94,8 @@
 		E281D5251C9D7047005A017D /* RIO.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RIO.swift; sourceTree = "<group>"; };
 		E281D5271C9E0780005A017D /* Util.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
 		E281D5291CA49054005A017D /* D.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = D.swift; sourceTree = "<group>"; };
+		E2AF9BB31CF7DFE30083759A /* AObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AObserver.swift; sourceTree = "<group>"; };
+		E2AF9BB51CF7E95E0083759A /* Lock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Lock.swift; sourceTree = "<group>"; };
 		E2BB243D1CA5362600CD45AC /* RD.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RD.swift; sourceTree = "<group>"; };
 		E2BB243F1CA6535C00CD45AC /* Recorder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Recorder.swift; sourceTree = "<group>"; };
 		E2BB24491CAAA01A00CD45AC /* RSF.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSF.swift; sourceTree = "<group>"; };
@@ -98,6 +104,8 @@
 		E2C9132A1C72D65B009E825F /* QiniuSWTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = QiniuSWTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E2C9132F1C72D65B009E825F /* QiniuSWTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QiniuSWTests.swift; sourceTree = "<group>"; };
 		E2C913311C72D65B009E825F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E2F858F41D176F9600A62158 /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
+		E2F858FA1D182B9F00A62158 /* Graph.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Graph.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -167,10 +175,14 @@
 				E281D4DB1C9819E2005A017D /* DData.swift */,
 				E281D4E61C981E48005A017D /* Json.swift */,
 				E20ED8741CAF740F005A9A05 /* Singleton.swift */,
+				E2AF9BB51CF7E95E0083759A /* Lock.swift */,
 				E281D4E21C981E48005A017D /* Async.swift */,
+				E2AF9BB31CF7DFE30083759A /* AObserver.swift */,
 				E281D4E41C981E48005A017D /* Channel.swift */,
 				E2BB243F1CA6535C00CD45AC /* Recorder.swift */,
 				E20ED89A1CB00EAE005A9A05 /* SQLiteStack.swift */,
+				E2F858F41D176F9600A62158 /* Logger.swift */,
+				E2F858FA1D182B9F00A62158 /* Graph.swift */,
 			);
 			path = UtilSW;
 			sourceTree = "<group>";
@@ -416,11 +428,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				E281D4E81C981E48005A017D /* Async.swift in Sources */,
+				E2AF9BB61CF7E95E0083759A /* Lock.swift in Sources */,
 				E20ED8751CAF740F005A9A05 /* Singleton.swift in Sources */,
 				E281D4EB1C981E48005A017D /* Crc32.swift in Sources */,
 				E2BB24401CA6535C00CD45AC /* Recorder.swift in Sources */,
 				E281D4EA1C981E48005A017D /* Channel.swift in Sources */,
+				E2AF9BB41CF7DFE30083759A /* AObserver.swift in Sources */,
+				E2F858F51D176F9700A62158 /* Logger.swift in Sources */,
 				E281D4DE1C981A67005A017D /* Extension.swift in Sources */,
+				E2F858FB1D182B9F00A62158 /* Graph.swift in Sources */,
 				E281D4DC1C9819E2005A017D /* DData.swift in Sources */,
 				E281D4E91C981E48005A017D /* Base64.swift in Sources */,
 				E281D5281C9E0780005A017D /* Util.swift in Sources */,
@@ -485,6 +501,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.fatboyzz.CommonCrypto;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = $SDKROOT;
 				SKIP_INSTALL = YES;
 			};
 			name = Debug;
@@ -504,6 +521,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.fatboyzz.CommonCrypto;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = $SDKROOT;
 				SKIP_INSTALL = YES;
 			};
 			name = Release;
@@ -584,7 +602,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -626,7 +644,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos9.2;

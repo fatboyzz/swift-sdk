@@ -21,7 +21,7 @@ let testConfig = "\(testPath)/TestConfig.json"
 
 let tc = { () -> TestConfig in
     let data = NSData(contentsOfFile: testConfig)!
-    return jsonToObj(TestConfig(), data)
+    return jsonToJmodel(TestConfig(), data)
 }()
 
 let c = { () -> Client in
@@ -48,7 +48,7 @@ class RandomData {
         if mgr.fileExistsAtPath(path) { return false }
         let ch = Channel(fd: creat(path, 0o644))
         let r = try! Channel(path: "/dev/random", oflag: O_RDONLY)
-        r.copyTo(ch, count: size).runSync()
+        r.copyTo(ch, count: Int64(size)).runSync()
         return true
     }
     

@@ -7,34 +7,14 @@ public class Channel {
     public let size : Int64
     public let channel : dispatch_io_t
     
-    static func canSeek(fd : Int32) -> Bool {
-        let pos = lseek(fd, 0, SEEK_CUR)
-        return pos != -1
-    }
-    
-    static func ioType(canSeek : Bool) -> dispatch_io_type_t {
-        if canSeek {
-            return DISPATCH_IO_RANDOM
-        } else {
-            return DISPATCH_IO_STREAM
-        }
-    }
-    
-    static func size(channel : dispatch_io_t) -> Int64 {
-        let fd = dispatch_io_get_descriptor(channel)
-        var buf = stat()
-        fstat(fd, &buf)
-        return buf.st_size
-    }
-    
     public init(fd : Int32) {
         self.fd = fd
-        self.canSeek = Channel.canSeek(self.fd)
-        self.ioType = Channel.ioType(self.canSeek)
-        self.channel = dispatch_io_create(
-            self.ioType , self.fd, qUtility(), {err in close(fd)}
+        canSeek = fileCanSeek(fd: fd)
+        ioType = canSeek ? DISPATCH_IO_RANDOM : DISPATCH_IO_STREAM
+        channel = dispatch_io_create(
+            self.ioType , self.fd, qUtility(), { _ in close(fd) }
         )
-        self.size = Channel.size(self.channel)
+        size = try! fileStat(fd: fd).st_size
     }
     
     public convenience init(
@@ -42,7 +22,7 @@ public class Channel {
         oflag : Int32,
         mode : mode_t = 0o644
     ) throws {
-        let fd = open(path, oflag, 0o644)
+        let fd = open(path, oflag, mode)
         if fd < 0 { throw posixError() }
         self.init(fd : fd)
     }
@@ -86,24 +66,27 @@ public class Channel {
     }
     
     public func copyTo(
-        other : Channel,
+        dst : Channel,
         srcOffset : Int64 = 0,
         dstOffset : Int64 = 0,
-        count : Int = Int.max,
-        limit : Int = 1 << 22 // 4M
+        count : Int64 = Int64.max,
+        limit : Int = 1 << 22, // 4M
+        notify : (block : Int) -> () = ignore
     ) -> Async<()> {
-        if count <= 0 { return ret(()) }
-        let reqc = min(count, limit)
+        if count <= 0 { return dummy() }
+        let reqc = Int(min(count, Int64(limit)))
         return readAt(srcOffset, reqc).bind(.Sync)
         { (data : DData) in
             let recvc = data.count
-            if recvc == 0 { return ret(()) }
-            return other.writeAt(dstOffset, data).bind(.Sync) {
-                return self.copyTo(other,
+            if recvc == 0 { return dummy() }
+            return dst.writeAt(dstOffset, data).bind(.Sync) {
+                notify(block: recvc)
+                return self.copyTo(dst,
                     srcOffset: srcOffset + recvc,
                     dstOffset: dstOffset + recvc,
                     count: count - recvc,
-                    limit: limit
+                    limit: limit,
+                    notify: notify
                 )
             }
         }

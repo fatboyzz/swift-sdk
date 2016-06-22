@@ -1,9 +1,9 @@
 import Foundation
 import UtilSW
 
-public class PutPolicy : NSObject, CustomJobj {
+public class PutPolicy : NSObject, CustomJns {
     public var scope : String
-    public var deadline : UInt32
+    public var deadline : UInt32 // Unit : second
     public var insertOnly : UInt16 = 0
     public var detectMime : UInt8 = 0
     public var callbackFetchKey : UInt8 = 0
@@ -28,14 +28,14 @@ public class PutPolicy : NSObject, CustomJobj {
         self.deadline = deadline
     }
     
-    public func toJobj(d: NSMutableDictionary) {
+    public func toJns(d: NSMutableDictionary) {
         let emptyKeys = d.allKeys.filter {
             empty(d.objectForKey($0)!)
         }
         d.removeObjectsForKeys(emptyKeys)
     }
     
-    public func fromJobj(d: NSMutableDictionary) {}
+    public func fromJns(d: NSMutableDictionary) {}
 }
 
 public func deadline(expire : NSTimeInterval) -> UInt32 {
@@ -56,15 +56,15 @@ public struct PutExtra {
     public init() {}
 }
 
-public class PutSucc : NSObject, CustomJobj {
+public class PutSucc : NSObject, CustomJns {
     public var qetag = ""
     public var key = ""
     
-    public func toJobj(d: NSMutableDictionary) {
+    public func toJns(d: NSMutableDictionary) {
         d.updateKey("qetag", newKey: "hash")
     }
     
-    public func fromJobj(d: NSMutableDictionary) {
+    public func fromJns(d: NSMutableDictionary) {
         d.updateKey("hash", newKey: "qetag")
     }
 }
